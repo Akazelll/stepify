@@ -14,6 +14,14 @@ return new class extends Migration
         Schema::create('tutor_details', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
+            $table->foreignId('tutorial_id')->constrained('tutorials')->onDelete('cascade');
+            $table->text('text')->nullable();
+            $table->string('url')->nullable();
+            $table->string('code')->nullable();
+            $table->string('image')->nullable();
+            $table->integer('order');
+            $table->enum('status', ['show', 'hide'])->default('hide');
+
         });
     }
 

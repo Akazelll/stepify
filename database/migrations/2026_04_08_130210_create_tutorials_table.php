@@ -14,6 +14,11 @@ return new class extends Migration
         Schema::create('tutorials', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
+            $table->string('title');
+            $table->string('kode_matkul');
+            $table->string('url_presentasi')->unique();
+            $table->string('url_final')->unique();
+            $table->string('creator_email');
         });
     }
 
