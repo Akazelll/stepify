@@ -1,48 +1,22 @@
 <?php
 
-use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\TutorialController;
+use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\TutorDetailController;
 
 Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
+Route::middleware(['api.auth'])->group(function () {
 
-// Route::middleware('auth')->group(function () {
-//     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-//     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-//     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-// });
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['api.auth'])->name('dashboard');
+    Route::resource('tutorials', TutorialController::class);
 
-Route::get('/test-makul', function () {
-    $token = \Illuminate\Support\Facades\Session::get('refreshToken');
+    Route::get('/tutorials/{tutorial}/details', [TutorDetailController::class, 'index'])->name('tutor-details.index');
+    Route::post('/tutorials/{tutorial}/details', [TutorDetailController::class, 'store'])->name('tutor-details.store');
+    Route::delete('/tutorials/{tutorial}/details', [TutorDetailController::class, 'destroy'])->name('tutor-details.destroy');});
 
-    if (!$token) {
-        return "Gagal: Token kosong di session.";
-    }
-
-    // 1. BERSUNGUT-SUNGUT MODE: Kita bersihkan token dari spasi atau kutip ekstra
-    $cleanToken = trim(str_replace('"', '', $token));
-
-    // 2. MANUAL HEADER: Kita tiru persis kelakuan Postman
-    $response = \Illuminate\Support\Facades\Http::withHeaders([
-        'Authorization' => 'Bearer ' . $cleanToken,
-        'Accept'        => 'application/json',
-    ])->get('https://jwt-auth-eight-neon.vercel.app/getMakul');
-
-    // 3. Tampilkan hasil interogasi
-    return response()->json([
-        'panjang_token' => strlen($cleanToken),
-        'token_yang_dikirim' => $cleanToken,
-        'status_kode' => $response->status(),
-        'balasan_api' => $response->json()
-    ]);
-});
-require __DIR__.'/auth.php';
+require __DIR__ . '/auth.php';

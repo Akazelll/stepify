@@ -18,18 +18,21 @@ class Tutorial extends Model
         'creator_email',
     ];
 
-    public function Details()
+    public function details()
     {
-        return $this->hasMany(TutorDetail::class);
+        return $this->hasMany(TutorDetail::class, 'tutorial_id');
     }
 
     protected static function boot()
     {
         parent::boot();
         static::creating(function ($tutorial) {
-            $slug = Str::slug($tutorial->title);
-            $tutorial->url_presentasi = $slug;
-            $tutorial->url_final = $slug;
+            if(empty($tutorial->url_presentasi)) {
+                $tutorial->url_presentasi = Str::slug($tutorial->title) . '-presentasi';
+            }
+            if(empty($tutorial->url_final)) {
+                $tutorial->url_final = Str::slug($tutorial->title) . '-final';
+            }
         });
     }
 }

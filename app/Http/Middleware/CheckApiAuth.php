@@ -16,7 +16,7 @@ class CheckApiAuth
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if(!Session::has('refresh_token')) {
+        if(!Session::has('refreshToken')) {
             return response()->json(['error' => 'Silahkan Login Terlebih Dahulu'], 401);
         }
         return $next($request);
