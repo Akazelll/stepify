@@ -25,6 +25,8 @@ Route::middleware(['api.auth'])->group(function () {
 });
 
 Route::get('/presentation/{url}', [PresentationController::class, 'show'])->name('presentation.show');
+Route::get('/finished/{url}', [PresentationController::class, 'downloadPdf'])->name('presentation.finished');
+Route::get('/api/tutorials', [TutorialController::class, 'apiTutorials']);
 
 
 require __DIR__ . '/auth.php';
