@@ -94,4 +94,12 @@ class TutorDetailController extends Controller
         return redirect()->route('tutorial.details.index', $tutorialId)
             ->with('success', 'Detail berhasil dihapus.');
     }
+
+    public function toggleStatus(TutorDetail $detail)
+    {
+        $detail->update([
+            'status' => $detail->status === 'show' ? 'hide' : 'show',
+        ]);
+        return back()->with('success', 'Status detail berhasil diubah.');
+    }
 }

@@ -17,7 +17,7 @@ return new class extends Migration
             $table->foreignId('tutorial_id')->constrained('tutorials')->onDelete('cascade');
             $table->text('text')->nullable();
             $table->string('url')->nullable();
-            $table->string('code')->nullable();
+            $table->text('code')->nullable();
             $table->string('image')->nullable();
             $table->integer('order');
             $table->enum('status', ['show', 'hide'])->default('hide');

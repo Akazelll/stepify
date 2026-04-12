@@ -4,10 +4,13 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\TutorialController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\TutorDetailController;
+use App\Http\Controllers\PresentationController;
 
 Route::get('/', function () {
-    return view('welcome');
+    return view('auth.login');
 });
+
+
 
 Route::middleware(['api.auth'])->group(function () {
 
@@ -15,8 +18,13 @@ Route::middleware(['api.auth'])->group(function () {
 
     Route::resource('tutorials', TutorialController::class);
 
-    Route::get('/tutorials/{tutorial}/details', [TutorDetailController::class, 'index'])->name('tutor-details.index');
-    Route::post('/tutorials/{tutorial}/details', [TutorDetailController::class, 'store'])->name('tutor-details.store');
-    Route::delete('/tutorials/{tutorial}/details', [TutorDetailController::class, 'destroy'])->name('tutor-details.destroy');});
+    Route::get('/tutorials/{tutorial}/details', [TutorDetailController::class, 'index'])->name('tutorial.details.index');
+    Route::post('/tutorials/{tutorial}/details', [TutorDetailController::class, 'store'])->name('tutorial.details.store');
+    Route::delete('/tutorials/{tutorial}/details', [TutorDetailController::class, 'destroy'])->name('tutorial.details.destroy');
+    Route::patch('/tutorial-details/{detail}/toggle', [TutorDetailController::class, 'toggleStatus'])->name('tutorial.details.toggle');
+});
+
+Route::get('/presentation/{url}', [PresentationController::class, 'show'])->name('presentation.show');
+
 
 require __DIR__ . '/auth.php';

@@ -43,13 +43,13 @@ class TutorialController extends Controller
     {
         $request->validate([
             'title' => 'required|string|max:255',
-            'kode_makul' => 'required|string',
+            'kode_matkul' => 'required|string',
             'creator_email' => 'required|email',
         ]);
 
         Tutorial::create([
             'title' => $request->title,
-            'kode_makul' => $request->kode_makul,
+            'kode_matkul' => $request->kode_matkul,
             'creator_email' => $request->creator_email,
         ]); 
 

@@ -19,7 +19,7 @@
                     
                     <h3 class="card-title text-lg border-b border-base-300 pb-3 mb-4">Informasi Dasar Tutorial</h3>
 
-                    <form action="{{ route('tutorials.store') }}" method="POST">
+                    <form action="{{ route('tutorials.store') }}" method="POST" novalidate>
                         @csrf
 
                         <div class="form-control w-full mb-4">

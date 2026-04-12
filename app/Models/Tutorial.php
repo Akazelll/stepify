@@ -26,12 +26,13 @@ class Tutorial extends Model
     protected static function boot()
     {
         parent::boot();
+
         static::creating(function ($tutorial) {
-            if(empty($tutorial->url_presentasi)) {
-                $tutorial->url_presentasi = Str::slug($tutorial->title) . '-presentasi';
+            if (empty($tutorial->url_presentasi)) {
+                $tutorial->url_presentasi = Str::random(10);
             }
-            if(empty($tutorial->url_final)) {
-                $tutorial->url_final = Str::slug($tutorial->title) . '-final';
+            if (empty($tutorial->url_final)) {
+                $tutorial->url_final = Str::random(10);
             }
         });
     }
