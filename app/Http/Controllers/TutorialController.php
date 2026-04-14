@@ -87,7 +87,7 @@ class TutorialController extends Controller
         $tutorial->delete();
         return redirect()->route('tutorials.index')->with('success', 'Master Tutorial deleted successfully).');
     }
-    
+
     public function apiTutorials()
     {
         $allTutorials = Tutorial::all();
@@ -112,8 +112,20 @@ class TutorialController extends Controller
                 'tutorials' => $tutotialData,
             ];
         }
+        $tutorials = Tutorial::where('kode_matkul', $kode_matkul)->select('title as judul', 'url_presentasi', 'url_final', 'creator_email', 'created_at', 'updated_at')->get();
+        if ($tutorials->isEmpty()) {
+            return response()->json([
+                'code' => 404,
+                'description' => 'No tutorials found for the specified kode_matkul.',
+                'results' => []
+            ], 404);
+        }
         return response()->json([
-            'results' => $result
-        ], 200, [], JSON_PRETTY_PRINT);
+            'code' => 200,
+            'description' => 'Tutorials retrieved successfully.',
+            'results' => [
+                $kode_matkul => $tutorials
+            ]
+        ]);
     }
 }

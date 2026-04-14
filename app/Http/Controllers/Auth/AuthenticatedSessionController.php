@@ -26,6 +26,9 @@ class AuthenticatedSessionController extends Controller
      */
     public function store(LoginRequest $request): RedirectResponse
     {
+        // $request->authenticate();
+        $request->session()->regenerate();
+
         $response = Http::post('https://jwt-auth-eight-neon.vercel.app/login', [
             'email' => $request->email,
             'password' => $request->password,

@@ -36,4 +36,12 @@ class Tutorial extends Model
             }
         });
     }
+    private static function generateUniqueUrl($column)
+    {
+        do {
+            $url = Str::random(10);
+        } while (self::where($column, $url)->exists());
+
+        return $url;
+    }
 }
