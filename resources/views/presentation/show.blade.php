@@ -2,49 +2,92 @@
 
     <x-presentation.navbar :tutorial="$tutorial" :totalSteps="count($details)" />
 
-    <div class="flex-grow flex flex-col justify-center items-center p-4 sm:p-6 lg:p-10 w-full">
-        <div class="max-w-4xl w-full relative">
+    <div class="flex h-[calc(100vh-4rem)] w-full relative overflow-hidden">
 
-            @forelse($details as $index => $detail)
-                <x-presentation.step-card :detail="$detail" :index="$index" />
-            @empty
-                <div class="hero bg-base-100 rounded-box shadow-lg border border-base-200">
-                    <div class="hero-content text-center py-16">
-                        <div class="max-w-md">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-20 w-20 mx-auto text-warning mb-4"
-                                fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+        <aside id="presentation-sidebar"
+            class="w-72 shrink-0 bg-white border-r border-slate-200 h-full overflow-y-auto transition-all duration-300 z-10 hidden md:block">
+            <div class="p-6">
+                <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-5">Navigasi Langkah</h3>
+
+                <ul class="space-y-1.5 relative before:absolute before:inset-y-0 before:left-3.5 before:w-px before:bg-slate-100"
+                    id="sidebar-step-list">
+                    @foreach ($details as $index => $detail)
+                        <li class="relative">
+                            <button onclick="scrollToStep({{ $index }})" id="sidebar-btn-{{ $index }}"
+                                class="flex items-center gap-3 w-full p-2 rounded-lg transition-all duration-200 text-left group">
+
+                                <div class="w-7 h-7 rounded-full flex items-center justify-center shrink-0 bg-white border-2 transition-colors z-10"
+                                    id="sidebar-indicator-{{ $index }}">
+                                    <span class="text-[10px] font-bold"
+                                        id="sidebar-num-{{ $index }}">{{ $detail->order }}</span>
+                                </div>
+
+                                <span class="text-sm font-medium truncate w-full"
+                                    title="Langkah {{ $detail->order }}">Langkah {{ $detail->order }}</span>
+                            </button>
+                        </li>
+                    @endforeach
+                </ul>
+            </div>
+        </aside>
+
+        <main id="presentation-main"
+            class="flex-1 h-full overflow-y-auto bg-[#F1F5F9] relative transition-all duration-300 scroll-smooth">
+            <div class="max-w-4xl mx-auto py-10 px-4 sm:px-8 pb-40" id="step-container">
+
+                @forelse($details as $index => $detail)
+                    <x-presentation.step-card :detail="$detail" :index="$index" />
+                @empty
+                    <div
+                        class="bg-white rounded-3xl border border-dashed border-slate-200 p-12 flex flex-col items-center justify-center text-center mt-10 shadow-sm">
+                        <div
+                            class="w-20 h-20 bg-amber-50 text-amber-400 rounded-full flex items-center justify-center mb-5">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10" fill="none" viewBox="0 0 24 24"
+                                stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
                                     d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
                             </svg>
-                            <h1 class="text-3xl font-bold">Belum Ada Materi</h1>
-                            <p class="py-4 opacity-70">Tutorial ini belum memiliki detail langkah yang dipublikasikan
-                                oleh kreator.</p>
                         </div>
+                        <h1 class="text-2xl font-bold text-[#020617] mb-2">Belum Ada Materi</h1>
+                        <p class="text-slate-500 max-w-sm">Tutorial ini belum memiliki detail langkah yang
+                            dipublikasikan oleh dosen pengajar.</p>
+                    </div>
+                @endforelse
+
+                @if (count($details) > 0)
+                    <div class="mt-8 flex justify-center opacity-100 transition-opacity duration-500"
+                        id="next-step-container">
+                        <button onclick="revealNextStep()"
+                            class="inline-flex items-center justify-center rounded-full bg-white border border-slate-200 px-8 py-4 text-sm font-bold text-[#14B8A6] shadow-[0_2px_12px_-4px_rgba(0,0,0,0.05)] hover:shadow-md hover:border-[#14B8A6]/40 transition-all hover:-translate-y-0.5 group">
+                            Tampilkan Langkah Selanjutnya
+                            <svg xmlns="http://www.w3.org/2000/svg"
+                                class="h-5 w-5 ml-2 text-slate-400 group-hover:text-[#14B8A6] transition-colors"
+                                fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M19 14l-7 7m0 0l-7-7m7 7V3" />
+                            </svg>
+                        </button>
+                    </div>
+                @endif
+
+                <div id="end-tutorial-indicator"
+                    class="hidden mt-16 text-center opacity-0 transition-opacity duration-1000">
+                    <div class="inline-flex flex-col items-center justify-center">
+                        <div
+                            class="w-14 h-14 bg-[#14B8A6]/10 text-[#14B8A6] rounded-full flex items-center justify-center mb-4">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7" fill="none" viewBox="0 0 24 24"
+                                stroke="currentColor" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+                            </svg>
+                        </div>
+                        <h3 class="text-xl font-bold text-[#020617]">Materi Selesai</h3>
+                        <p class="text-sm text-slate-500 mt-1 max-w-xs">Anda telah menyelesaikan seluruh instruksi pada
+                            presentasi ini.</p>
                     </div>
                 </div>
-            @endforelse
 
-            @if (count($details) > 0)
-                <div class="flex flex-col-reverse sm:flex-row justify-between items-center mt-6 gap-3">
-                    <button id="btn-prev" onclick="changeStep(-1)" class="btn btn-outline w-full sm:w-auto">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
-                            stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
-                        </svg>
-                        Sebelumnya
-                    </button>
-                    <button id="btn-next" onclick="changeStep(1)"
-                        class="btn btn-primary w-full sm:w-auto sm:min-w-[12rem] shadow-md">
-                        Langkah Selanjutnya
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
-                            stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
-                        </svg>
-                    </button>
-                </div>
-            @endif
-
-        </div>
+            </div>
+        </main>
     </div>
 
     <x-slot name="scripts">
@@ -62,19 +105,14 @@
                 const textToCopy = codeBlock.innerText || codeBlock.textContent;
 
                 const copyTextSpan = btnElement.querySelector('.copy-text');
-                const iconSvg = btnElement.querySelector('.icon-copy');
-                const originalIconHtml = iconSvg.outerHTML;
+                const originalText = copyTextSpan.innerText;
 
                 const successUI = () => {
-                    copyTextSpan.innerText = 'Copied!';
-                    btnElement.classList.add('!text-success');
-                    iconSvg.outerHTML =
-                        `<svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1 icon-copy" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" /></svg>`;
-
+                    copyTextSpan.innerText = 'Disalin!';
+                    btnElement.classList.add('!text-[#14B8A6]', '!border-[#14B8A6]/50', '!bg-[#14B8A6]/10');
                     setTimeout(() => {
-                        btnElement.querySelector('.copy-text').innerText = 'Copy';
-                        btnElement.classList.remove('!text-success');
-                        btnElement.querySelector('.icon-copy').outerHTML = originalIconHtml;
+                        copyTextSpan.innerText = originalText;
+                        btnElement.classList.remove('!text-[#14B8A6]', '!border-[#14B8A6]/50', '!bg-[#14B8A6]/10');
                     }, 2000);
                 };
 
@@ -89,11 +127,9 @@
             function fallbackCopyTextToClipboard(text, successCallback) {
                 var textArea = document.createElement("textarea");
                 textArea.value = text;
-                textArea.style.top = "0";
-                textArea.style.left = "0";
                 textArea.style.position = "fixed";
+                textArea.style.left = "-9999px";
                 document.body.appendChild(textArea);
-                textArea.focus();
                 textArea.select();
                 try {
                     if (document.execCommand('copy')) successCallback();
@@ -101,76 +137,143 @@
                 document.body.removeChild(textArea);
             }
 
-            // 3. Logika Navigasi Slide
+            // 3. State & Variabel Presentasi
             const tutorialId = "{{ $tutorial->id }}";
-            const slides = document.querySelectorAll('.step-slide');
-            const totalSteps = slides.length;
-            let currentStep = 0;
+            const totalSteps = {{ count($details) }};
+            let currentStep = parseInt(localStorage.getItem(`tutorial_step_${tutorialId}`) || 0);
 
-            const savedStep = localStorage.getItem(`tutorial_step_${tutorialId}`);
-            if (savedStep !== null && parseInt(savedStep) < totalSteps) {
-                currentStep = parseInt(savedStep);
-            }
+            // Validasi Boundary
+            if (currentStep >= totalSteps && totalSteps > 0) currentStep = totalSteps - 1;
 
-            const btnPrev = document.getElementById('btn-prev');
-            const btnNext = document.getElementById('btn-next');
-            const stepDisplay = document.getElementById('current-step-display');
-            const topProgress = document.getElementById('top-progress');
-
-            function initSlider() {
+            // 4. Inisialisasi Tampilan Awal (Load State)
+            function initPresentation() {
                 if (totalSteps > 0) {
-                    slides.forEach(slide => slide.classList.add('hidden'));
-                    slides[currentStep].classList.remove('hidden');
-                    slides[currentStep].classList.add('block', 'slide-in');
+                    // Tampilkan semua langkah dari 0 sampai currentStep
+                    for (let i = 0; i <= currentStep; i++) {
+                        const stepEl = document.getElementById('step-' + i);
+                        if (stepEl) {
+                            stepEl.classList.remove('hidden');
+                            stepEl.classList.add('block');
+                        }
+                    }
                     updateUI();
+
+                    // Auto-scroll ke langkah terakhir saat dimuat
+                    setTimeout(() => {
+                        const lastVisible = document.getElementById('step-' + currentStep);
+                        if (lastVisible) lastVisible.scrollIntoView({
+                            behavior: 'auto',
+                            block: 'start'
+                        });
+                    }, 100);
                 }
             }
 
-            function changeStep(direction) {
-                slides[currentStep].classList.remove('slide-in');
-                slides[currentStep].style.opacity = '0';
-
-                setTimeout(() => {
-                    slides[currentStep].classList.remove('block');
-                    slides[currentStep].classList.add('hidden');
-                    slides[currentStep].style.opacity = '';
-
-                    currentStep += direction;
+            // 5. Fungsi Memunculkan Langkah Baru (Live Feel)
+            function revealNextStep() {
+                if (currentStep < totalSteps - 1) {
+                    currentStep++;
                     localStorage.setItem(`tutorial_step_${tutorialId}`, currentStep);
 
-                    slides[currentStep].classList.remove('hidden');
-                    slides[currentStep].classList.add('block', 'slide-in');
+                    const stepEl = document.getElementById('step-' + currentStep);
+                    if (stepEl) {
+                        stepEl.classList.remove('hidden');
+                        // Berikan animasi slide-up-fade dari CSS layout
+                        stepEl.classList.add('block', 'slide-up-fade');
 
+                        // Gulir halus (Auto-Scroll) ke langkah baru
+                        setTimeout(() => {
+                            stepEl.scrollIntoView({
+                                behavior: 'smooth',
+                                block: 'start'
+                            });
+                        }, 50);
+                    }
                     updateUI();
-                    window.scrollTo({
-                        top: 0,
-                        behavior: 'smooth'
-                    });
-                }, 150);
-            }
-
-            function updateUI() {
-                if (stepDisplay) stepDisplay.innerText = currentStep + 1;
-                if (topProgress) topProgress.value = currentStep + 1;
-
-                currentStep === 0 ? btnPrev.classList.add('btn-disabled') : btnPrev.classList.remove('btn-disabled');
-
-                if (currentStep === totalSteps - 1) {
-                    btnNext.innerHTML = 'Langkah Selesai ✓';
-                    btnNext.classList.replace('btn-primary', 'btn-disabled');
-                    btnNext.onclick = null;
-                } else {
-                    btnNext.innerHTML =
-                        'Langkah Selanjutnya <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg>';
-                    btnNext.classList.remove('btn-disabled');
-                    btnNext.classList.add('btn-primary');
-                    btnNext.onclick = () => changeStep(1);
                 }
             }
 
-            initSlider();
+            // 6. Fungsi Klik Sidebar untuk Gulir Manual
+            window.scrollToStep = function(index) {
+                if (index <= currentStep) {
+                    const stepEl = document.getElementById('step-' + index);
+                    if (stepEl) stepEl.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'center'
+                    });
+                }
+            }
 
-            // 4. Auto Refresh Sesuai Spesifikasi (15 Detik)
+            // 7. Perbarui Antarmuka (Sidebar & Progress Bar)
+            function updateUI() {
+                // Update Progress Bar Tipis
+                const progressEl = document.getElementById('navbar-progress');
+                if (progressEl && totalSteps > 0) {
+                    const percent = ((currentStep + 1) / totalSteps) * 100;
+                    progressEl.style.width = percent + '%';
+                }
+
+                // Update Sidebar Styles
+                for (let i = 0; i < totalSteps; i++) {
+                    const btn = document.getElementById('sidebar-btn-' + i);
+                    const indicator = document.getElementById('sidebar-indicator-' + i);
+                    const num = document.getElementById('sidebar-num-' + i);
+
+                    if (!btn || !indicator || !num) continue;
+
+                    if (i === currentStep) {
+                        // Langkah Aktif (Sorotan Warna Utama)
+                        btn.className =
+                            "flex items-center gap-3 w-full p-2 rounded-lg transition-all duration-200 text-left group bg-[#14B8A6]/10";
+                        indicator.className =
+                            "w-7 h-7 rounded-full flex items-center justify-center shrink-0 bg-white border-2 transition-colors z-10 border-[#14B8A6] shadow-[0_0_8px_rgba(20,184,166,0.4)]";
+                        num.className = "text-[10px] font-bold text-[#14B8A6]";
+                    } else if (i < currentStep) {
+                        // Langkah Selesai (Sedikit Redup)
+                        btn.className =
+                            "flex items-center gap-3 w-full p-2 rounded-lg transition-all duration-200 text-left group hover:bg-slate-50 cursor-pointer";
+                        indicator.className =
+                            "w-7 h-7 rounded-full flex items-center justify-center shrink-0 bg-slate-50 border-2 transition-colors z-10 border-slate-200 group-hover:border-[#14B8A6]/50";
+                        num.className = "text-[10px] font-bold text-slate-500 group-hover:text-[#14B8A6]";
+                    } else {
+                        // Langkah Terkunci / Belum Tampil (Sangat Redup)
+                        btn.className =
+                            "flex items-center gap-3 w-full p-2 rounded-lg transition-all duration-200 text-left group opacity-40 cursor-not-allowed";
+                        indicator.className =
+                            "w-7 h-7 rounded-full flex items-center justify-center shrink-0 bg-white border-2 transition-colors z-10 border-slate-100";
+                        num.className = "text-[10px] font-bold text-slate-300";
+                    }
+                }
+
+                // Sembunyikan Tombol "Langkah Selanjutnya" jika sudah di akhir
+                const nextBtnContainer = document.getElementById('next-step-container');
+                const endIndicator = document.getElementById('end-tutorial-indicator');
+
+                if (currentStep >= totalSteps - 1) {
+                    if (nextBtnContainer) nextBtnContainer.style.display = 'none';
+                    if (endIndicator) {
+                        endIndicator.classList.remove('hidden');
+                        setTimeout(() => endIndicator.classList.remove('opacity-0'), 100);
+                    }
+                }
+            }
+
+            // 8. Logika Tombol Mode Fokus (Sembunyikan Sidebar)
+            const toggleBtn = document.getElementById('toggle-sidebar');
+            const sidebar = document.getElementById('presentation-sidebar');
+
+            if (toggleBtn && sidebar) {
+                toggleBtn.addEventListener('click', () => {
+                    // Cukup toggle class hidden bawaan tailwind pada breakpoint medium (md:block)
+                    sidebar.classList.toggle('md:block');
+                    sidebar.classList.toggle('hidden');
+                });
+            }
+
+            // Jalankan
+            initPresentation();
+
+            // 9. Auto-Refresh Sinkronisasi Layar (Opsional, diatur 15 detik)
             setInterval(() => {
                 localStorage.setItem(`tutorial_step_${tutorialId}`, currentStep);
                 window.location.reload();

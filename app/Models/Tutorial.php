@@ -29,10 +29,10 @@ class Tutorial extends Model
 
         static::creating(function ($tutorial) {
             if (empty($tutorial->url_presentasi)) {
-                $tutorial->url_presentasi = Str::random(10);
+                $tutorial->url_presentasi = self::generateUniqueUrl('url_presentasi');
             }
             if (empty($tutorial->url_final)) {
-                $tutorial->url_final = Str::random(10);
+                $tutorial->url_final = self::generateUniqueUrl('url_final');
             }
         });
     }

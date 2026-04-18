@@ -6,33 +6,40 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>{{ config('app.name', 'Laravel') }}</title>
+    <title>{{ config('app.name', 'Stepify') }}</title>
 
-    <!-- Fonts -->
-    <link rel="preconnect" href="https://fonts.bunny.net">
-    <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
-    <!-- Scripts -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
+
+    <style>
+        /* Menerapkan font ke seluruh body */
+        body { font-family: 'Inter', sans-serif; }
+    </style>
 </head>
 
-<body class="font-sans antialiased">
-    <div class="min-h-screen bg-base-200">
-
+<body class="font-sans antialiased text-[#020617] bg-[#F1F5F9]">
+    
+    <div class="flex h-screen overflow-hidden">
+        
         @include('layouts.navigation')
 
-        @if (isset($header))
-            <header class="bg-base-100 shadow">
-                <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
-                    {{ $header }}
+        <div class="flex-1 flex flex-col overflow-hidden">
+            
+            <header class="md:hidden bg-white border-b border-slate-200 p-4 flex justify-between items-center">
+                <span class="font-bold text-xl text-[#14B8A6]">Stepify</span>
+                <div class="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" /></svg>
                 </div>
             </header>
-        @endif
 
-        <main>
-            {{ $slot }}
-        </main>
+            <main class="flex-1 overflow-x-hidden overflow-y-auto bg-[#F1F5F9]">
+                {{ $slot }}
+            </main>
+        </div>
     </div>
-</body>
 
+</body>
 </html>

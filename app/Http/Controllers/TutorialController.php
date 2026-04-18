@@ -88,44 +88,36 @@ class TutorialController extends Controller
         return redirect()->route('tutorials.index')->with('success', 'Master Tutorial deleted successfully).');
     }
 
-    public function apiTutorials()
+    public function apiTutorials($kode_matkul)
     {
-        $allTutorials = Tutorial::all();
-        $grouped = $allTutorials->groupBy('kode_matkul');
-        $result = [];
+        $tutorials = Tutorial::where('kode_matkul', $kode_matkul)->get();
 
-        foreach ($grouped as $kode_matkul => $tutorials) {
-            $tutotialData = $tutorials->map(function ($tutor) {
-                return [
-                    'judul' => $tutor->title,
-                    'url_presentasi' => url('/presentation/' . $tutor->url_presentasi),
-                    'url_final' => url('/finished/' . $tutor->url_final),
-                    'creator_email' => $tutor->creator_email,
-                    'created_at' => $tutor->created_at->toDateTimeString(),
-                    'updated_at' => $tutor->updated_at->toDateTimeString(),
-
-                ];
-            });
-            $result[] = [
-                'kode_matkul' => $kode_matkul,
-                'nama_matkul' => 'Mata Kuliah ' . $kode_matkul,
-                'tutorials' => $tutotialData,
-            ];
-        }
-        $tutorials = Tutorial::where('kode_matkul', $kode_matkul)->select('title as judul', 'url_presentasi', 'url_final', 'creator_email', 'created_at', 'updated_at')->get();
         if ($tutorials->isEmpty()) {
             return response()->json([
                 'code' => 404,
-                'description' => 'No tutorials found for the specified kode_matkul.',
+                'message' => 'No tutorials found for the given course code.',
                 'results' => []
             ], 404);
         }
+
+        $tutorialData = $tutorials->map(function ($tutorial) {
+            return [
+                'id' => $tutorial->id,
+                'title' => $tutorial->title,
+                'kode_matkul' => $tutorial->kode_matkul,
+                'url_presentasi' => $tutorial->url_presentasi,
+                'url_final' => $tutorial->url_final,
+                'creator_email' => $tutorial->creator_email,
+            ];
+        });
+
         return response()->json([
-            'code' => 200,
-            'description' => 'Tutorials retrieved successfully.',
             'results' => [
-                $kode_matkul => $tutorials
+                $kode_matkul => [
+                    'nama_matkul' => 'Matakuliah ' . $kode_matkul,
+                    'tutorials' => $tutorialData
+                ]
             ]
-        ]);
+        ], 200, [], JSON_PRETTY_PRINT);
     }
 }
