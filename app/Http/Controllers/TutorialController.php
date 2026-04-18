@@ -43,13 +43,18 @@ class TutorialController extends Controller
         $request->validate([
             'title' => 'required|string|max:255',
             'kode_matkul' => 'required|string',
-            'creator_email' => 'required|email',
         ]);
+
+        $creatorEmail = Session::get('user_email');
+
+        if (!$creatorEmail) {
+            return back()->withErrors(['creator_email' => 'Creator email is required. Please log in again.'])->withInput();
+        }
 
         Tutorial::create([
             'title' => $request->title,
             'kode_matkul' => $request->kode_matkul,
-            'creator_email' => $request->creator_email,
+            'creator_email' => $creatorEmail,
         ]);
 
         return redirect()->route('tutorials.index')->with('success', 'Master Tutorial created successfully.');

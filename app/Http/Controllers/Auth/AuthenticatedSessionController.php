@@ -6,7 +6,6 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\LoginRequest;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Session;
@@ -36,6 +35,7 @@ class AuthenticatedSessionController extends Controller
 
         if ($response->successful() && $response->json('refreshToken')) {
             Session::put('refreshToken', $response->json('refreshToken'));
+            Session::put('user_email', $request->email);
             return redirect()->route('dashboard')->with('success', 'Login successful!');
         }
 

@@ -94,27 +94,21 @@
                 </div>
 
                 <div>
-                    <label for="creator_email" class="block text-sm font-bold text-[#020617] mb-2">Email Kreator <span
-                            class="text-[#EC4899]">*</span></label>
-                    <div class="relative">
+                    <label for="creator_email" class="block text-sm font-bold text-[#020617] mb-2">Email Kreator</label>
+                    <div class="relative opacity-90">
                         <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-slate-400" fill="none"
-                                viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round"
                                     d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                             </svg>
                         </div>
-                        <input type="email" name="creator_email" id="creator_email"
-                            value="{{ old('creator_email', Auth::user()->email ?? '') }}"
-                            class="w-full rounded-xl border-slate-200 pl-11 pr-4 py-3 text-sm text-[#020617] bg-slate-50 focus:border-[#14B8A6] focus:ring-4 focus:ring-[#14B8A6]/10 transition-all outline-none @error('creator_email') border-[#EC4899] @enderror"
-                            required readonly>
+                        <input type="email" id="creator_email" value="{{ session('user_email') }}"
+                            class="w-full rounded-xl border border-slate-200 pl-11 pr-4 py-3 text-sm text-slate-500 bg-slate-100 cursor-not-allowed focus:outline-none"
+                            disabled>
                     </div>
-                    <p class="text-xs text-slate-500 mt-2 font-medium">Informasi ini otomatis terisi menggunakan akun
-                        Anda saat ini dan dikunci untuk keamanan.</p>
-
-                    @error('creator_email')
-                        <p class="mt-2 text-xs text-[#EC4899]">{{ $message }}</p>
-                    @enderror
+                    <p class="text-xs text-slate-500 mt-2 font-medium">Email ini otomatis terisi dari sesi Anda dan
+                        tidak dapat diubah.</p>
                 </div>
 
                 <div class="divider pt-2 mb-0"></div>
