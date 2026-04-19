@@ -25,10 +25,9 @@ class AuthenticatedSessionController extends Controller
      */
     public function store(LoginRequest $request): RedirectResponse
     {
-        // $request->authenticate();
         $request->session()->regenerate();
 
-        $response = Http::post('https://jwt-auth-eight-neon.vercel.app/login', [
+        $response = Http::post(config('services.jwt.url') . '/login', [
             'email' => $request->email,
             'password' => $request->password,
         ]);
@@ -49,7 +48,7 @@ class AuthenticatedSessionController extends Controller
     {
         $token = Session::get('refreshToken');
         if ($token) {
-            Http::withToken($token)->get('https://jwt-auth-eight-neon.vercel.app/logout');
+            Http::withToken($token)->get(config('services.jwt.url') . '/logout');
         }
 
         Session::forget('refreshToken');

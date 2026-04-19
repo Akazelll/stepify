@@ -31,7 +31,7 @@ class TutorialController extends Controller
         $response = Http::withHeaders([
             'Authorization' => 'Bearer ' . $cleanToken,
             'Accept'        => 'application/json',
-        ])->get('https://jwt-auth-eight-neon.vercel.app/getMakul');
+        ])->get(config('services.jwt.url') . '/getMakul');
 
         $makulData = $response->successful() ? $response->json('data') : [];
         return view('tutorials.create', compact('makulData'));
