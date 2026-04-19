@@ -28,5 +28,7 @@ Route::get('/presentation/{url}', [PresentationController::class, 'show'])->name
 Route::get('/finished/{url}', [PresentationController::class, 'downloadPdf'])->name('presentation.finished');
 Route::get('/api/{kode_matkul}', [TutorialController::class, 'apiTutorials']);
 
+Route::put('/tutorial-details/{detail}',[TutorDetailController::class, 'update'])->name('tutorial.details.update');
+
 
 require __DIR__ . '/auth.php';

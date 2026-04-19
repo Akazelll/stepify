@@ -19,7 +19,7 @@ class PresentationController extends Controller
     public function downloadPdf($url)
     {
         $tutorial = Tutorial::where('url_final', $url)->firstOrFail();
-        $details = $tutorial->details()->where('status', 'show')->orderBy('order', 'asc')->get();
+        $details = $tutorial->details()->orderBy('order', 'asc')->get();
 
         $pdf = PDF::loadView('presentation.pdf', compact('tutorial', 'details'))
             ->setPaper('a4')
