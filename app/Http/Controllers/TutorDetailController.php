@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\TutorDetail;
 use App\Models\Tutorial;
+use Illuminate\Support\Facades\Storage;
+
 
 class TutorDetailController extends Controller
 {
@@ -79,9 +81,32 @@ class TutorDetailController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, TutorDetail $detail)
     {
-        //
+        $request->validate([
+            'text' => 'nullable|string',
+            'code' => 'nullable|string',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'url' => 'nullable|url'
+        ]);
+
+        $imagePath = $detail->image;
+
+        if ($request->hasFile('image')) {
+            if ($imagePath && Storage::disk('public')->exists($imagePath)) {
+                Storage::disk('public')->delete($imagePath);
+            }
+            $imagePath = $request->file('image')->store('tutor_images', 'public');
+        }
+
+        $detail->update([
+            'text' => $request->text,
+            'code' => $request->code,
+            'image' => $imagePath,
+            'url' => $request->url
+        ]);
+
+        return redirect()->route('tutorial.details.index', $detail->tutorial_id)->with('success', 'Tutorial detail updated successfully.');
     }
 
     /**
