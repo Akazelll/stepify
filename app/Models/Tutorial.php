@@ -23,6 +23,16 @@ class Tutorial extends Model
         return $this->hasMany(TutorDetail::class, 'tutorial_id');
     }
 
+
+    private static function generateUniqueUrl($column)
+    {
+        do {
+            $url = Str::random(10);
+        } while (self::where($column, $url)->exists());
+
+        return $url;
+    }
+
     protected static function boot()
     {
         parent::boot();
@@ -35,13 +45,5 @@ class Tutorial extends Model
                 $tutorial->url_final = self::generateUniqueUrl('url_final');
             }
         });
-    }
-    private static function generateUniqueUrl($column)
-    {
-        do {
-            $url = Str::random(10);
-        } while (self::where($column, $url)->exists());
-
-        return $url;
     }
 }

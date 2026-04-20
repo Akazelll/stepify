@@ -4,7 +4,7 @@
         <div class="mb-10 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
             <div>
                 <h1 class="text-3xl font-bold text-[#020617] tracking-tight">Selamat Datang,
-                    {{ explode(' ', Auth::user()->name ?? 'Kreator')[0] }}! 👋</h1>
+                    {{ explode(' ', Auth::user()->name ?? 'Pengguna')[0] }}! 👋</h1>
                 <p class="text-slate-500 mt-1.5 text-sm">Berikut adalah ringkasan kelas dan tutorial Anda hari ini.</p>
             </div>
         </div>

@@ -18,6 +18,8 @@ class DashboardController extends Controller
 
         $rawToken = Session::get('refreshToken');
         $cleanToken = trim(str_replace('"', '', $rawToken));
+
+        // dd($cleanToken);
         
 
         $response = Http::withHeaders([

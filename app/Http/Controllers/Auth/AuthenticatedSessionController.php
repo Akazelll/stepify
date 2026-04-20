@@ -33,6 +33,9 @@ class AuthenticatedSessionController extends Controller
         ]);
 
         if ($response->successful() && $response->json('refreshToken')) {
+
+            // dd($token = $response->json('refreshToken'));
+
             Session::put('refreshToken', $response->json('refreshToken'));
             Session::put('user_email', $request->email);
             return redirect()->route('dashboard')->with('success', 'Login successful!');
@@ -47,6 +50,9 @@ class AuthenticatedSessionController extends Controller
     public function destroy(Request $request): RedirectResponse
     {
         $token = Session::get('refreshToken');
+
+        // dd($token);
+
         if ($token) {
             Http::withToken($token)->get(config('services.jwt.url') . '/logout');
         }
