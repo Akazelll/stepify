@@ -73,12 +73,12 @@
                             <div
                                 class="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-slate-50 border border-slate-100 text-xs">
                                 <span class="font-semibold text-slate-600">Live:</span>
-                                <a href="{{ route('presentation.show', $tutorial->url_presentasi) }}" target="_blank"
+                                <a href="{{ route('presentation.index', $tutorial->url_presentasi) }}" target="_blank"
                                     class="text-[#0EA5E9] hover:underline truncate max-w-[120px] sm:max-w-[200px]">
                                     /{{ $tutorial->url_presentasi }}
                                 </a>
                                 <button
-                                    onclick="navigator.clipboard.writeText('{{ route('presentation.show', $tutorial->url_presentasi) }}'); alert('URL Presentasi Disalin!')"
+                                    onclick="navigator.clipboard.writeText('{{ route('presentation.index', $tutorial->url_presentasi) }}'); alert('URL Presentasi Disalin!')"
                                     class="text-slate-400 hover:text-[#14B8A6]" title="Salin Link">
                                     <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5" fill="none"
                                         viewBox="0 0 24 24" stroke="currentColor">

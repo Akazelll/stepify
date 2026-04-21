@@ -5,7 +5,6 @@
     <div class="flex items-center justify-between px-4 sm:px-6 lg:px-8 h-16">
 
         <div class="flex items-center gap-3 sm:gap-4 overflow-hidden">
-
             <button id="toggle-sidebar"
                 class="p-2 -ml-2 rounded-lg text-slate-500 hover:bg-slate-100 hover:text-[#020617] transition-colors focus:outline-none focus:ring-2 focus:ring-[#14B8A6]/30"
                 title="Mode Fokus (Sembunyikan Sidebar)">
@@ -35,13 +34,13 @@
         </div>
 
         <div class="flex items-center gap-2 sm:gap-4 shrink-0">
-
             <div
                 class="hidden sm:flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-[#EC4899]/10 text-[#EC4899] border border-[#EC4899]/20 text-[10px] font-bold uppercase tracking-wider">
                 <span class="w-1.5 h-1.5 rounded-full bg-[#EC4899] animate-pulse"></span>
                 Live
             </div>
 
+            {{-- Tombol PDF hanya muncul jika hidden status = 0 ($isFinished) --}}
             @if ($isFinished)
                 <button onclick="window.open('{{ url('/finished/' . $tutorial->url_final) }}', '_blank')"
                     class="hidden sm:inline-flex items-center justify-center px-3 py-1.5 text-xs font-semibold rounded-lg bg-white border border-slate-200 text-slate-600 hover:bg-slate-50 hover:text-[#020617] hover:border-slate-300 transition-all shadow-sm"
@@ -75,7 +74,6 @@
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
                 </svg>
             </a>
-
         </div>
     </div>
 

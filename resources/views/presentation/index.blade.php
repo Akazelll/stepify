@@ -83,18 +83,7 @@
                         <h3 class="text-xl font-bold text-[#020617]">Materi Selesai</h3>
                         <p class="text-sm text-slate-500 mt-1 max-w-xs">Anda telah menyelesaikan seluruh instruksi pada
                             presentasi ini.</p>
-
-                        @if ($isFinished)
-                            <a href="{{ url('/finished/' . $tutorial->url_final) }}" target="_blank"
-                                class="mt-6 inline-flex items-center justify-center gap-2 px-6 py-2.5 rounded-full bg-[#14B8A6] text-white text-sm font-semibold shadow-md hover:bg-[#0d9488] transition-all hover:-translate-y-0.5">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none"
-                                    viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                                </svg>
-                                Ekspor ke PDF
-                            </a>
-                        @endif
+                        {{-- Tombol PDF di sini telah dihapus agar hanya ada di Navbar --}}
                     </div>
                 </div>
 
@@ -153,30 +142,20 @@
             const tutorialId = "{{ $tutorial->id }}";
             const totalSteps = {{ count($details) }};
             const isFinished = {{ $isFinished ? 'true' : 'false' }};
-            let currentStep = parseInt(localStorage.getItem(`tutorial_step_${tutorialId}`) || 0);
 
-            // Validasi Boundary
-            if (currentStep >= totalSteps && totalSteps > 0) currentStep = totalSteps - 1;
+            // Perbaikan: Selalu mulai dari step 0 saat halaman dibuka
+            let currentStep = 0;
+            localStorage.setItem(`tutorial_step_${tutorialId}`, currentStep);
 
-            // 4. Inisialisasi Tampilan Awal (Load State)
+            // 4. Inisialisasi Tampilan Awal
             function initPresentation() {
                 if (totalSteps > 0) {
-                    for (let i = 0; i <= currentStep; i++) {
-                        const stepEl = document.getElementById('step-' + i);
-                        if (stepEl) {
-                            stepEl.classList.remove('hidden');
-                            stepEl.classList.add('block');
-                        }
+                    const stepEl = document.getElementById('step-0');
+                    if (stepEl) {
+                        stepEl.classList.remove('hidden');
+                        stepEl.classList.add('block');
                     }
                     updateUI();
-
-                    setTimeout(() => {
-                        const lastVisible = document.getElementById('step-' + currentStep);
-                        if (lastVisible) lastVisible.scrollIntoView({
-                            behavior: 'auto',
-                            block: 'start'
-                        });
-                    }, 100);
                 }
             }
 
@@ -215,14 +194,12 @@
 
             // 7. Perbarui Antarmuka (Sidebar, Progress Bar & End Indicator)
             function updateUI() {
-                // Update Progress Bar
                 const progressEl = document.getElementById('navbar-progress');
                 if (progressEl && totalSteps > 0) {
                     const percent = ((currentStep + 1) / totalSteps) * 100;
                     progressEl.style.width = percent + '%';
                 }
 
-                // Update Sidebar Styles
                 for (let i = 0; i < totalSteps; i++) {
                     const btn = document.getElementById('sidebar-btn-' + i);
                     const indicator = document.getElementById('sidebar-indicator-' + i);
@@ -251,7 +228,6 @@
                     }
                 }
 
-                // Sembunyikan tombol "Langkah Selanjutnya" & tampilkan end indicator
                 const nextBtnContainer = document.getElementById('next-step-container');
                 const endIndicator = document.getElementById('end-tutorial-indicator');
 
@@ -264,7 +240,6 @@
                 }
             }
 
-            // 8. Logika Tombol Mode Fokus (Sembunyikan Sidebar)
             const toggleBtn = document.getElementById('toggle-sidebar');
             const sidebar = document.getElementById('presentation-sidebar');
 
@@ -275,15 +250,13 @@
                 });
             }
 
-            // Jalankan
             initPresentation();
 
-            // 9. Auto-Refresh Sinkronisasi Layar (15 detik)
+            // 8. Auto-Refresh Sinkronisasi Layar (Tetap simpan state saat ini sebelum refresh)
             setInterval(() => {
                 localStorage.setItem(`tutorial_step_${tutorialId}`, currentStep);
                 window.location.reload();
             }, 15000);
         </script>
     </x-slot>
-
 </x-presentation.layout>

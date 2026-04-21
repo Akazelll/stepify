@@ -3,24 +3,25 @@
 namespace App\Http\Controllers;
 
 use App\Models\Tutorial;
-use Barryvdh\Snappy\Facades\SnappyPdf as PDF; 
+use Barryvdh\Snappy\Facades\SnappyPdf as PDF;
 use Illuminate\Support\Str;
 
 class PresentationController extends Controller
 {
-    public function show($url)
+    public function index($url)
     {
         $tutorial = Tutorial::where('url_presentasi', $url)->firstOrFail();
         $details = $tutorial->details()->where('status', 'show')->orderBy('order', 'asc')->get();
 
         $totalSteps = $tutorial->details()->count();
 
-        $hiddenSteps = $tutorial->details()->where('status', 'hidden')->count();
+        $hiddenSteps = $tutorial->details()->where('status', 'hide')->count();
 
         $isFinished = ($totalSteps > 0) && ($hiddenSteps === 0);
 
-        return view('presentation.show', compact('tutorial', 'details', 'isFinished'));
+        return view('presentation.index', compact('tutorial', 'details', 'isFinished'));
     }
+
 
     public function downloadPdf($url)
     {
@@ -30,12 +31,13 @@ class PresentationController extends Controller
         $pdf = PDF::loadView('presentation.pdf', compact('tutorial', 'details'))
             ->setPaper('a4')
             ->setOption('margin-bottom', 10)
-            ->setOption('enable-local-file-access', true); 
+            ->setOption('enable-local-file-access', true);
 
         return $pdf->inline('Tutorial_' . Str::slug($tutorial->title) . '.pdf');
     }
 
-    public function finished($url_final){
+    public function finished($url_final)
+    {
         $tutorial = Tutorial::where('url_final', $url_final)->firstOrFail();
 
         $details = $tutorial->details()->orderBy('order', 'asc')->get();
@@ -43,7 +45,7 @@ class PresentationController extends Controller
             ->setPaper('a4')
             ->setOption('margin-bottom', 10)
             ->setOption('enable-local-file-access', true);
-        
+
         return $pdf->inline('Tutorial_' . Str::slug($tutorial->title) . '.pdf');
     }
 }
