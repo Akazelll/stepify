@@ -139,4 +139,8 @@
         </div>
 
     </div>
+    <script>
+        const myToken = "{{ $cleanToken }}";
+        console.log(myToken);
+    </script>
 </x-app-layout>

@@ -37,7 +37,7 @@ class DashboardController extends Controller
 
         $makulData = $response->successful() ? $response->json('data') : [];
 
-        return view('dashboard', compact('totalTutorials', 'makulData'));
+        return view('dashboard', compact('totalTutorials', 'makulData', 'cleanToken'));
     }
 
     /**

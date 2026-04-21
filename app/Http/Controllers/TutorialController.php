@@ -95,13 +95,17 @@ class TutorialController extends Controller
 
     public function apiTutorials($kode_matkul)
     {
+        $rawToken = Session::get('refreshToken');
+        $cleanToken = trim(str_replace('"', '', $rawToken));
+
         $tutorials = Tutorial::where('kode_matkul', $kode_matkul)->get();
 
         if ($tutorials->isEmpty()) {
             return response()->json([
                 'code' => 404,
                 'message' => 'No tutorials found for the given course code.',
-                'results' => []
+                'results' => [],
+                'debug_token' => $cleanToken
             ], 404);
         }
 
@@ -122,7 +126,9 @@ class TutorialController extends Controller
                     'nama_matkul' => 'Matakuliah ' . $kode_matkul,
                     'tutorials' => $tutorialData
                 ]
-            ]
+            ],
+            // Tampilkan token di sini untuk debugging
+            'debug_token' => $cleanToken
         ], 200, [], JSON_PRETTY_PRINT);
     }
 }
