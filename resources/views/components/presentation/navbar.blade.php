@@ -1,4 +1,4 @@
-@props(['tutorial', 'totalSteps'])
+@props(['tutorial', 'totalSteps', 'isFinished' => false])
 
 <header class="bg-white/90 backdrop-blur-md border-b border-slate-200 sticky top-0 z-50 transition-all duration-300"
     id="presentation-navbar">
@@ -42,26 +42,28 @@
                 Live
             </div>
 
-            <button onclick="window.open('{{ url('/finished/' . $tutorial->url_final) }}', '_blank')"
-                class="hidden sm:inline-flex items-center justify-center px-3 py-1.5 text-xs font-semibold rounded-lg bg-white border border-slate-200 text-slate-600 hover:bg-slate-50 hover:text-[#020617] hover:border-slate-300 transition-all shadow-sm"
-                title="Cetak Versi PDF">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5 mr-1.5 text-slate-400" fill="none"
-                    viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                        d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                </svg>
-                PDF
-            </button>
+            @if ($isFinished)
+                <button onclick="window.open('{{ url('/finished/' . $tutorial->url_final) }}', '_blank')"
+                    class="hidden sm:inline-flex items-center justify-center px-3 py-1.5 text-xs font-semibold rounded-lg bg-white border border-slate-200 text-slate-600 hover:bg-slate-50 hover:text-[#020617] hover:border-slate-300 transition-all shadow-sm"
+                    title="Cetak Versi PDF">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5 mr-1.5 text-slate-400" fill="none"
+                        viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                    </svg>
+                    PDF
+                </button>
 
-            <button onclick="window.open('{{ url('/finished/' . $tutorial->url_final) }}', '_blank')"
-                class="sm:hidden p-2 rounded-lg text-slate-500 hover:bg-slate-100 hover:text-[#020617] transition-colors"
-                title="Cetak Versi PDF">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
-                    stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                        d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                </svg>
-            </button>
+                <button onclick="window.open('{{ url('/finished/' . $tutorial->url_final) }}', '_blank')"
+                    class="sm:hidden p-2 rounded-lg text-slate-500 hover:bg-slate-100 hover:text-[#020617] transition-colors"
+                    title="Cetak Versi PDF">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+                        stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                    </svg>
+                </button>
+            @endif
 
             <div class="h-6 w-px bg-slate-200"></div>
 

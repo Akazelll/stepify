@@ -13,7 +13,13 @@ class PresentationController extends Controller
         $tutorial = Tutorial::where('url_presentasi', $url)->firstOrFail();
         $details = $tutorial->details()->where('status', 'show')->orderBy('order', 'asc')->get();
 
-        return view('presentation.show', compact('tutorial', 'details'));
+        $totalSteps = $tutorial->details()->count();
+
+        $hiddenSteps = $tutorial->details()->where('status', 'hidden')->count();
+
+        $isFinished = ($totalSteps > 0) && ($hiddenSteps === 0);
+
+        return view('presentation.show', compact('tutorial', 'details', 'isFinished'));
     }
 
     public function downloadPdf($url)
@@ -28,6 +34,7 @@ class PresentationController extends Controller
 
         return $pdf->inline('Tutorial_' . Str::slug($tutorial->title) . '.pdf');
     }
+
     public function finished($url_final){
         $tutorial = Tutorial::where('url_final', $url_final)->firstOrFail();
 

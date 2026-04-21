@@ -1,6 +1,6 @@
 <x-presentation.layout :title="$tutorial->title . ' - Live Presentation'">
 
-    <x-presentation.navbar :tutorial="$tutorial" :totalSteps="count($details)" />
+    <x-presentation.navbar :tutorial="$tutorial" :totalSteps="count($details)" :isFinished="$isFinished" />
 
     <div class="flex h-[calc(100vh-4rem)] w-full relative overflow-hidden">
 
@@ -83,6 +83,18 @@
                         <h3 class="text-xl font-bold text-[#020617]">Materi Selesai</h3>
                         <p class="text-sm text-slate-500 mt-1 max-w-xs">Anda telah menyelesaikan seluruh instruksi pada
                             presentasi ini.</p>
+
+                        @if ($isFinished)
+                            <a href="{{ url('/finished/' . $tutorial->url_final) }}" target="_blank"
+                                class="mt-6 inline-flex items-center justify-center gap-2 px-6 py-2.5 rounded-full bg-[#14B8A6] text-white text-sm font-semibold shadow-md hover:bg-[#0d9488] transition-all hover:-translate-y-0.5">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none"
+                                    viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                                </svg>
+                                Ekspor ke PDF
+                            </a>
+                        @endif
                     </div>
                 </div>
 
@@ -140,6 +152,7 @@
             // 3. State & Variabel Presentasi
             const tutorialId = "{{ $tutorial->id }}";
             const totalSteps = {{ count($details) }};
+            const isFinished = {{ $isFinished ? 'true' : 'false' }};
             let currentStep = parseInt(localStorage.getItem(`tutorial_step_${tutorialId}`) || 0);
 
             // Validasi Boundary
@@ -148,7 +161,6 @@
             // 4. Inisialisasi Tampilan Awal (Load State)
             function initPresentation() {
                 if (totalSteps > 0) {
-                    // Tampilkan semua langkah dari 0 sampai currentStep
                     for (let i = 0; i <= currentStep; i++) {
                         const stepEl = document.getElementById('step-' + i);
                         if (stepEl) {
@@ -158,7 +170,6 @@
                     }
                     updateUI();
 
-                    // Auto-scroll ke langkah terakhir saat dimuat
                     setTimeout(() => {
                         const lastVisible = document.getElementById('step-' + currentStep);
                         if (lastVisible) lastVisible.scrollIntoView({
@@ -178,10 +189,8 @@
                     const stepEl = document.getElementById('step-' + currentStep);
                     if (stepEl) {
                         stepEl.classList.remove('hidden');
-                        // Berikan animasi slide-up-fade dari CSS layout
                         stepEl.classList.add('block', 'slide-up-fade');
 
-                        // Gulir halus (Auto-Scroll) ke langkah baru
                         setTimeout(() => {
                             stepEl.scrollIntoView({
                                 behavior: 'smooth',
@@ -204,9 +213,9 @@
                 }
             }
 
-            // 7. Perbarui Antarmuka (Sidebar & Progress Bar)
+            // 7. Perbarui Antarmuka (Sidebar, Progress Bar & End Indicator)
             function updateUI() {
-                // Update Progress Bar Tipis
+                // Update Progress Bar
                 const progressEl = document.getElementById('navbar-progress');
                 if (progressEl && totalSteps > 0) {
                     const percent = ((currentStep + 1) / totalSteps) * 100;
@@ -222,21 +231,18 @@
                     if (!btn || !indicator || !num) continue;
 
                     if (i === currentStep) {
-                        // Langkah Aktif (Sorotan Warna Utama)
                         btn.className =
                             "flex items-center gap-3 w-full p-2 rounded-lg transition-all duration-200 text-left group bg-[#14B8A6]/10";
                         indicator.className =
                             "w-7 h-7 rounded-full flex items-center justify-center shrink-0 bg-white border-2 transition-colors z-10 border-[#14B8A6] shadow-[0_0_8px_rgba(20,184,166,0.4)]";
                         num.className = "text-[10px] font-bold text-[#14B8A6]";
                     } else if (i < currentStep) {
-                        // Langkah Selesai (Sedikit Redup)
                         btn.className =
                             "flex items-center gap-3 w-full p-2 rounded-lg transition-all duration-200 text-left group hover:bg-slate-50 cursor-pointer";
                         indicator.className =
                             "w-7 h-7 rounded-full flex items-center justify-center shrink-0 bg-slate-50 border-2 transition-colors z-10 border-slate-200 group-hover:border-[#14B8A6]/50";
                         num.className = "text-[10px] font-bold text-slate-500 group-hover:text-[#14B8A6]";
                     } else {
-                        // Langkah Terkunci / Belum Tampil (Sangat Redup)
                         btn.className =
                             "flex items-center gap-3 w-full p-2 rounded-lg transition-all duration-200 text-left group opacity-40 cursor-not-allowed";
                         indicator.className =
@@ -245,7 +251,7 @@
                     }
                 }
 
-                // Sembunyikan Tombol "Langkah Selanjutnya" jika sudah di akhir
+                // Sembunyikan tombol "Langkah Selanjutnya" & tampilkan end indicator
                 const nextBtnContainer = document.getElementById('next-step-container');
                 const endIndicator = document.getElementById('end-tutorial-indicator');
 
@@ -264,7 +270,6 @@
 
             if (toggleBtn && sidebar) {
                 toggleBtn.addEventListener('click', () => {
-                    // Cukup toggle class hidden bawaan tailwind pada breakpoint medium (md:block)
                     sidebar.classList.toggle('md:block');
                     sidebar.classList.toggle('hidden');
                 });
@@ -273,7 +278,7 @@
             // Jalankan
             initPresentation();
 
-            // 9. Auto-Refresh Sinkronisasi Layar (Opsional, diatur 15 detik)
+            // 9. Auto-Refresh Sinkronisasi Layar (15 detik)
             setInterval(() => {
                 localStorage.setItem(`tutorial_step_${tutorialId}`, currentStep);
                 window.location.reload();
