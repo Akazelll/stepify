@@ -35,17 +35,4 @@ class PresentationController extends Controller
 
         return $pdf->inline('Tutorial_' . Str::slug($tutorial->title) . '.pdf');
     }
-
-    public function finished($url_final)
-    {
-        $tutorial = Tutorial::where('url_final', $url_final)->firstOrFail();
-
-        $details = $tutorial->details()->orderBy('order', 'asc')->get();
-        $pdf = PDF::loadView('presentation.pdf', compact('tutorial', 'details'))
-            ->setPaper('a4')
-            ->setOption('margin-bottom', 10)
-            ->setOption('enable-local-file-access', true);
-
-        return $pdf->inline('Tutorial_' . Str::slug($tutorial->title) . '.pdf');
-    }
 }

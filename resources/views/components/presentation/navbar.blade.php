@@ -1,86 +1,86 @@
 @props(['tutorial', 'totalSteps', 'isFinished' => false])
 
-<header class="bg-white/90 backdrop-blur-md border-b border-slate-200 sticky top-0 z-50 transition-all duration-300"
-    id="presentation-navbar">
-    <div class="flex items-center justify-between px-4 sm:px-6 lg:px-8 h-16">
+<header id="presentation-navbar"
+    class="sticky top-0 z-50 w-full bg-white/95 backdrop-blur-md border-b border-slate-200 shadow-sm transition-all duration-300">
 
-        <div class="flex items-center gap-3 sm:gap-4 overflow-hidden">
+    <div class="flex items-center justify-between h-16 px-4 mx-auto max-w-screen-2xl sm:px-6 lg:px-8">
+
+        {{-- Kiri: Navigasi & Informasi Tutorial --}}
+        <div class="flex items-center flex-1 min-w-0 gap-3 sm:gap-4">
+
+            {{-- Hamburger Toggle Button Refactored --}}
             <button id="toggle-sidebar"
-                class="p-2 -ml-2 rounded-lg text-slate-500 hover:bg-slate-100 hover:text-[#020617] transition-colors focus:outline-none focus:ring-2 focus:ring-[#14B8A6]/30"
-                title="Mode Fokus (Sembunyikan Sidebar)">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
-                    stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h7" />
+                class="flex-shrink-0 inline-flex items-center justify-center w-10 h-10 -ml-1 rounded-xl text-slate-500 hover:bg-slate-100 hover:text-slate-900 focus:outline-none focus:ring-2 focus:ring-[#14B8A6]/40 active:scale-90 transition-all duration-200"
+                aria-label="Toggle navigation" title="Buka/Tutup Navigasi">
+                {{-- Modern Balanced Hamburger Icon --}}
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24"
+                    stroke-width="1.8" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round"
+                        d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
                 </svg>
             </button>
 
-            <div class="hidden sm:block h-6 w-px bg-slate-200"></div>
+            {{-- Divider Vertikal (Desktop Only) --}}
+            <div class="hidden md:block w-px h-8 bg-slate-200/80 shrink-0"></div>
 
-            <div class="flex flex-col justify-center">
+            {{-- Container Info Tutorial --}}
+            <div class="flex flex-col justify-center min-w-0">
                 <div class="flex items-center gap-2 mb-0.5">
                     <span
-                        class="text-[10px] font-bold uppercase tracking-wider text-[#0EA5E9]">{{ $tutorial->kode_matkul }}</span>
-                    <span class="w-1 h-1 rounded-full bg-slate-300 hidden sm:block"></span>
-                    <span
-                        class="text-[10px] font-medium text-slate-500 truncate max-w-[120px] sm:max-w-xs hidden sm:block">
+                        class="px-1.5 py-0.5 text-[9px] sm:text-[10px] font-bold uppercase tracking-widest text-[#0EA5E9] bg-[#0EA5E9]/5 rounded border border-[#0EA5E9]/10 shrink-0">
+                        {{ $tutorial->kode_matkul }}
+                    </span>
+                    <span class="hidden sm:inline-block w-1 h-1 rounded-full bg-slate-300"></span>
+                    <span class="hidden lg:block text-[10px] font-medium text-slate-400 truncate tracking-tight">
                         {{ $tutorial->creator_email }}
                     </span>
                 </div>
-                <h1
-                    class="text-sm sm:text-base font-bold text-[#020617] leading-tight truncate max-w-[200px] sm:max-w-md lg:max-w-xl tracking-tight">
+                <h1 class="text-sm sm:text-base font-extrabold text-slate-900 leading-none truncate tracking-tight"
+                    title="{{ $tutorial->title }}">
                     {{ $tutorial->title }}
                 </h1>
             </div>
         </div>
 
-        <div class="flex items-center gap-2 sm:gap-4 shrink-0">
+        {{-- Kanan: Badge Live & Aksi PDF --}}
+        <div class="flex items-center gap-3 shrink-0 pl-2">
+
+            {{-- Indikator Live dengan Pulse Effect --}}
             <div
-                class="hidden sm:flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-[#EC4899]/10 text-[#EC4899] border border-[#EC4899]/20 text-[10px] font-bold uppercase tracking-wider">
-                <span class="w-1.5 h-1.5 rounded-full bg-[#EC4899] animate-pulse"></span>
-                Live
+                class="flex items-center gap-2 px-3 py-1.5 rounded-full bg-pink-50 border border-pink-100/50 text-[#EC4899] text-[10px] font-bold uppercase tracking-widest shadow-sm">
+                <span class="relative flex w-2 h-2">
+                    <span
+                        class="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#EC4899] opacity-75"></span>
+                    <span class="relative inline-flex rounded-full h-2 w-2 bg-[#EC4899]"></span>
+                </span>
+                <span class="hidden sm:inline">Live Presentation</span>
             </div>
 
-            {{-- Tombol PDF hanya muncul jika hidden status = 0 ($isFinished) --}}
+            {{-- Tombol PDF Eksklusif --}}
             @if ($isFinished)
                 <button onclick="window.open('{{ url('/finished/' . $tutorial->url_final) }}', '_blank')"
-                    class="hidden sm:inline-flex items-center justify-center px-3 py-1.5 text-xs font-semibold rounded-lg bg-white border border-slate-200 text-slate-600 hover:bg-slate-50 hover:text-[#020617] hover:border-slate-300 transition-all shadow-sm"
+                    class="group inline-flex items-center justify-center gap-2 p-2 sm:px-4 sm:py-2 text-xs font-bold rounded-xl border border-slate-200 bg-white text-slate-700 shadow-sm hover:bg-[#EC4899] hover:text-white hover:border-[#EC4899] focus:outline-none focus:ring-2 focus:ring-[#EC4899]/40 active:scale-95 transition-all duration-200"
                     title="Cetak Versi PDF">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5 mr-1.5 text-slate-400" fill="none"
-                        viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    <svg xmlns="http://www.w3.org/2000/svg"
+                        class="w-4 h-4 transition-transform group-hover:-translate-y-0.5" fill="none"
+                        viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round"
                             d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                     </svg>
-                    PDF
-                </button>
-
-                <button onclick="window.open('{{ url('/finished/' . $tutorial->url_final) }}', '_blank')"
-                    class="sm:hidden p-2 rounded-lg text-slate-500 hover:bg-slate-100 hover:text-[#020617] transition-colors"
-                    title="Cetak Versi PDF">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
-                        stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                    </svg>
+                    <span class="hidden md:inline">Cetak PDF</span>
                 </button>
             @endif
 
-            <div class="h-6 w-px bg-slate-200"></div>
-
-            <a href="{{ route('dashboard') }}"
-                class="p-2 -mr-2 rounded-lg text-slate-400 hover:bg-[#EC4899]/10 hover:text-[#EC4899] transition-colors"
-                title="Tutup Presentasi">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
-                    stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-                </svg>
-            </a>
         </div>
     </div>
 
+    {{-- Progress Bar dengan Efek Glow --}}
     @if ($totalSteps > 0)
-        <div class="h-0.5 w-full bg-slate-100 absolute bottom-0 left-0 overflow-hidden">
-            <div id="navbar-progress" class="h-full bg-[#14B8A6] transition-all duration-500 ease-out"
+        <div class="absolute bottom-0 left-0 w-full h-[3px] bg-slate-100/50 overflow-hidden">
+            <div id="navbar-progress"
+                class="h-full bg-gradient-to-r from-[#14B8A6] to-[#0EA5E9] shadow-[0_0_8px_rgba(20,184,166,0.5)] transition-all duration-700 ease-in-out"
                 style="width: 0%"></div>
         </div>
     @endif
+
 </header>

@@ -127,7 +127,6 @@ class TutorialController extends Controller
                     'tutorials' => $tutorialData
                 ]
             ],
-            // Tampilkan token di sini untuk debugging
             'debug_token' => $cleanToken
         ], 200, [], JSON_PRETTY_PRINT);
     }
