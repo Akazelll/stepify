@@ -127,6 +127,7 @@ DB_PASSWORD=
 # macOS   : /usr/local/bin/wkhtmltopdf  (via Homebrew)
 # Windows : C:\Program Files\wkhtmltopdf\bin\wkhtmltopdf.exe
 WKHTMLTOPDF_PATH=/usr/local/bin/wkhtmltopdf
+JWT_API_URL="nama-endpoint-kamu"
 ```
 
 **6. Jalankan migrasi database**
